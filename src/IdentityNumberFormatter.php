@@ -30,6 +30,14 @@ class IdentityNumberFormatter
     private $useHyphen;
 
     /**
+     * If 10 numbers are supplied and prefixing 19
+     * renders the user 100+ year old prefix 20 instead
+     *
+     * @var boolean
+     */
+    private $noOldPeople;
+
+    /**
      * What type of hyphen to use ("-"/+)
      *
      * @var string
@@ -44,11 +52,12 @@ class IdentityNumberFormatter
      * @param  bool     $useHyphen      if hyphens should be used
      * @return void
      */
-    public function __construct($value, $characters, $useHyphen = false)
+    public function __construct($value, $characters, $useHyphen = false, $noOldPeople = false)
     {
         $this->value = $value;
         $this->characters = $characters;
         $this->useHyphen = $useHyphen;
+        $this->noOldPeople = $noOldPeople;
     }
 
     /**
@@ -89,7 +98,15 @@ class IdentityNumberFormatter
         }
 
         if ($characters == 12 && strlen($value) == 10) {
-            $value = 19 . $value;
+            if($this->noOldPeople){
+                if(substr($value, 0, 2) < date('y')){
+                    $value = 20 . $value;
+                }else{
+                    $value = 19 . $value;
+                }
+            }else{
+                $value = 19 . $value;
+            }
         }
 
         if ($characters == 10 && strlen($value) == 12) {
