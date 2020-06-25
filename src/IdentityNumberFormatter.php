@@ -99,7 +99,7 @@ class IdentityNumberFormatter
 
         if ($characters == 12 && strlen($value) == 10) {
             if($this->noOldPeople){
-                if(substr($value, 0, 2) < date('y')){
+                if(substr($value, 2, 2) <= date('y')){
                     $value = 20 . $value;
                 }else{
                     $value = 19 . $value;
